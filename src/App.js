@@ -1,49 +1,82 @@
+import { useEffect, useState } from 'react';
+
 import './App.css';
-import { Component } from 'react';
 import CardList from './components/CardList';
 import SearchBar from './components/SearchBar';
-class App extends Component {
 
-  constructor() {
-    super()
-    this.state = {
-      Monsters: [],
-      searchTerm: '',
-    }
-  }
-  componentDidMount() {
+const App = () => {
+  const [searchField, setSearchField] = useState("");
+  const [Monsters, setMonsters] = useState([]);
+
+  useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then(res => res.json())
-      .then(json => this.setState(() => {
-        return {
-          Monsters: json,
-        }
-      },
-        () => console.log(this.state),
-      )
-      );
+      .then(json => setMonsters(json));
+  }, []);
 
+
+
+
+  const onSearchChange = (event) => {
+    setSearchField(event.target.value)
   }
 
-  onSearchChange = (e) => {
-
-    this.setState({ searchTerm: e.target.value })
-  }
-  render() {
-    const { Monsters, searchTerm } = this.state;
-    const { onSearchChange } = this;
-
-
-    return (
-      <div className="App">
+  return (
+    <div className="App">
       <h1 className='app-heading'>Monsters Rolodex </h1>
-        <SearchBar onSearchChange={onSearchChange} />
-        <CardList Monsters={Monsters} searchTerm={searchTerm} />
+      <SearchBar onSearchChange={onSearchChange} />
+      
+      {<CardList Monsters={Monsters} searchTerm={searchField} />}
 
-      </div>
-    )
-  }
-
+    </div>
+  )
 }
+
+
+
+
+// class App extends Component {
+
+//   constructor() {
+//     super()
+//     this.state = {
+//       Monsters: [],
+//       searchTerm: '',
+//     }
+//   }
+//   componentDidMount() {
+//     fetch("https://jsonplaceholder.typicode.com/users")
+//       .then(res => res.json())
+//       .then(json => this.setState(() => {
+//         return {
+//           Monsters: json,
+//         }
+//       },
+//         () => console.log(this.state),
+//       )
+//       );
+
+//   }
+
+//   onSearchChange = (e) => {
+
+//     this.setState({ searchTerm: e.target.value })
+//   }
+//   render() {
+//     const { Monsters, searchTerm } = this.state;
+//     const { onSearchChange } = this;
+
+
+//     return (
+//       <div className="App">
+//       <h1 className='app-heading'>Monsters Rolodex </h1>
+//         <SearchBar onSearchChange={onSearchChange} />
+//         <CardList Monsters={Monsters} searchTerm={searchTerm} />
+
+//       </div>
+//     )
+//   }
+
+// }
 
 export default App;
